@@ -75,115 +75,115 @@ def create_feature_importance_plot(model, feature_names):
     return fig
 
 
-# def analyze_logs(log_data):
-#     log_lines = log_data.split('\n')
-#     error_count = sum(1 for line in log_lines if 'ERROR' in line)
-#     warning_count = sum(1 for line in log_lines if 'WARNING' in line)
-#
-#     st.write(f"Total log entries: {len(log_lines)}")
-#     st.write(f"Error entries: {error_count}")
-#     st.write(f"Warning entries: {warning_count}")
-#
-#     st.subheader("Sample Log Entries")
-#     st.text("\n".join(log_lines[:10]))
-#
-#
-# # Function to generate an attack report (with a DataFrame containing a 'Label' column)
-# def generate_attack_report(df):
-#     if 'Label' not in df.columns:
-#         st.write("Dataframe must contain a 'Label' column for attack types.")
-#         return
-#
-#     attack_counts = df['Label'].value_counts()
-#     attack_summary = attack_counts[attack_counts.index != 'BENIGN']
-#
-#     st.write("### Attack Summary")
-#     st.write(attack_summary)
-#
-#     fig = px.bar(attack_summary, x=attack_summary.index, y=attack_summary.values,
-#                  labels={'x': 'Attack Type', 'y': 'Count'}, title="Attack Distribution")
-#     st.plotly_chart(fig)
-#
-#
-# API_KEY = os.getenv("API_KEY")
+def analyze_logs(log_data):
+    log_lines = log_data.split('\n')
+    error_count = sum(1 for line in log_lines if 'ERROR' in line)
+    warning_count = sum(1 for line in log_lines if 'WARNING' in line)
+
+    st.write(f"Total log entries: {len(log_lines)}")
+    st.write(f"Error entries: {error_count}")
+    st.write(f"Warning entries: {warning_count}")
+
+    st.subheader("Sample Log Entries")
+    st.text("\n".join(log_lines[:10]))
 
 
-# def lookup_input(input_value):
-#     """
-#     Lookup an IP Address or Subnet using the AbuseIPDB API.
-#     For domains, resolve them to an IP address first.
-#     """
-#     api_url = "https://api.abuseipdb.com/api/v2/check"
-#     headers = {
-#         "Accept": "application/json",
-#         "Key": API_KEY
-#     }
-#
-#     params = {
-#         "maxAgeInDays": 90  # Look back for up to 90 days of abuse reports
-#     }
-#
-#     try:
-#         if "/" in input_value:  # Check if it's a subnet
-#             params["ipAddress"] = input_value
-#         elif "." in input_value and not input_value.replace(".", "").isdigit():  # Domain name
-#             resolved_ip = socket.gethostbyname(input_value)
-#             params["ipAddress"] = resolved_ip
-#         else:  # Assume it's an IP address
-#             params["ipAddress"] = input_value
-#
-#         response = requests.get(api_url, headers=headers, params=params)
-#         if response.status_code == 200:
-#             data = response.json().get("data", {})
-#             return {
-#                 "Input": input_value,
-#                 "Resolved IP": params.get("ipAddress"),
-#                 "Is Malicious": data.get("isPublic", False),
-#                 "Threat Score": data.get("abuseConfidenceScore", 0),
-#                 "Last Reported": data.get("lastReportedAt", "Unknown"),
-#                 "Category": data.get("usageType", "N/A"),
-#                 "ISP": data.get("isp", "Unknown"),
-#                 "Country": data.get("countryName", "Unknown")
-#             }
-#         else:
-#             return {"error": f"API request failed with status code {response.status_code}: {response.text}"}
-#     except socket.gaierror:
-#         return {"error": "Failed to resolve domain to an IP address."}
-#     except Exception as e:
-#         return {"error": f"An unexpected error occurred: {e}"}
+# Function to generate an attack report (with a DataFrame containing a 'Label' column)
+def generate_attack_report(df):
+    if 'Label' not in df.columns:
+        st.write("Dataframe must contain a 'Label' column for attack types.")
+        return
+
+    attack_counts = df['Label'].value_counts()
+    attack_summary = attack_counts[attack_counts.index != 'BENIGN']
+
+    st.write("### Attack Summary")
+    st.write(attack_summary)
+
+    fig = px.bar(attack_summary, x=attack_summary.index, y=attack_summary.values,
+                 labels={'x': 'Attack Type', 'y': 'Count'}, title="Attack Distribution")
+    st.plotly_chart(fig)
 
 
-# def display_threat_intelligence():
-#     """
-#     Display threat intelligence information in the Streamlit UI.
-#     """
-#     st.title("Threat Intelligence Lookup")
-#     st.markdown("Check an IP Address, Domain Name, or Subnet for potential malicious activity.")
-#
-#     user_input = st.text_input(
-#         "Enter an IP Address, Domain Name, or Subnet (e.g., 192.168.1.1, example.com, 192.168.0.0/24):")
-#
-#     if user_input:
-#         with st.spinner("Looking up threat intelligence data..."):
-#             result = lookup_input(user_input)
-#
-#         if "error" in result:
-#             st.error(result["error"])
-#         else:
-#             st.write("### Threat Intelligence Results")
-#             st.write(f"**Input**: {result['Input']}")
-#             st.write(f"**Resolved IP**: {result['Resolved IP']}")
-#             st.write(f"**Is Malicious**: {'Yes' if result['Is Malicious'] else 'No'}")
-#             st.write(f"**Threat Score**: {result['Threat Score']}")
-#             st.write(f"**Last Reported**: {result['Last Reported']}")
-#             st.write(f"**Category**: {result['Category']}")
-#             st.write(f"**ISP**: {result['ISP']}")
-#             st.write(f"**Country**: {result['Country']}")
-#
-#             if result['Is Malicious']:
-#                 st.warning("This input has a history of malicious activity.")
-#             else:
-#                 st.success("This input appears to be safe.")
+API_KEY = os.getenv("API_KEY")
+
+
+def lookup_input(input_value):
+    """
+    Lookup an IP Address or Subnet using the AbuseIPDB API.
+    For domains, resolve them to an IP address first.
+    """
+    api_url = "https://api.abuseipdb.com/api/v2/check"
+    headers = {
+        "Accept": "application/json",
+        "Key": API_KEY
+    }
+
+    params = {
+        "maxAgeInDays": 90  # Look back for up to 90 days of abuse reports
+    }
+
+    try:
+        if "/" in input_value:  # Check if it's a subnet
+            params["ipAddress"] = input_value
+        elif "." in input_value and not input_value.replace(".", "").isdigit():  # Domain name
+            resolved_ip = socket.gethostbyname(input_value)
+            params["ipAddress"] = resolved_ip
+        else:  # Assume it's an IP address
+            params["ipAddress"] = input_value
+
+        response = requests.get(api_url, headers=headers, params=params)
+        if response.status_code == 200:
+            data = response.json().get("data", {})
+            return {
+                "Input": input_value,
+                "Resolved IP": params.get("ipAddress"),
+                "Is Malicious": data.get("isPublic", False),
+                "Threat Score": data.get("abuseConfidenceScore", 0),
+                "Last Reported": data.get("lastReportedAt", "Unknown"),
+                "Category": data.get("usageType", "N/A"),
+                "ISP": data.get("isp", "Unknown"),
+                "Country": data.get("countryName", "Unknown")
+            }
+        else:
+            return {"error": f"API request failed with status code {response.status_code}: {response.text}"}
+    except socket.gaierror:
+        return {"error": "Failed to resolve domain to an IP address."}
+    except Exception as e:
+        return {"error": f"An unexpected error occurred: {e}"}
+
+
+def display_threat_intelligence():
+    """
+    Display threat intelligence information in the Streamlit UI.
+    """
+    st.title("Threat Intelligence Lookup")
+    st.markdown("Check an IP Address, Domain Name, or Subnet for potential malicious activity.")
+
+    user_input = st.text_input(
+        "Enter an IP Address, Domain Name, or Subnet (e.g., 192.168.1.1, example.com, 192.168.0.0/24):")
+
+    if user_input:
+        with st.spinner("Looking up threat intelligence data..."):
+            result = lookup_input(user_input)
+
+        if "error" in result:
+            st.error(result["error"])
+        else:
+            st.write("### Threat Intelligence Results")
+            st.write(f"**Input**: {result['Input']}")
+            st.write(f"**Resolved IP**: {result['Resolved IP']}")
+            st.write(f"**Is Malicious**: {'Yes' if result['Is Malicious'] else 'No'}")
+            st.write(f"**Threat Score**: {result['Threat Score']}")
+            st.write(f"**Last Reported**: {result['Last Reported']}")
+            st.write(f"**Category**: {result['Category']}")
+            st.write(f"**ISP**: {result['ISP']}")
+            st.write(f"**Country**: {result['Country']}")
+
+            if result['Is Malicious']:
+                st.warning("This input has a history of malicious activity.")
+            else:
+                st.success("This input appears to be safe.")
 
 
 def save_flow_data(flow_data, predictions, filename):
@@ -311,71 +311,182 @@ def live_detection():
         st.error("Please train the model first!")
 
 
-def save_feedback_to_csv(feedback):
-    """
-    Save the user feedback to a CSV file.
-    """
-    file_path = "feedback.csv"
-    file_exists = os.path.isfile(file_path)
-    with open(file_path, mode="a", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(["Feedback"])
-
-        writer.writerow([feedback])
-
+# def save_feedback_to_csv(feedback):
+#     """
+#     Save the user feedback to a CSV file.
+#     """
+#     file_path = "feedback.csv"
+#     file_exists = os.path.isfile(file_path)
+#     with open(file_path, mode="a", newline="", encoding="utf-8") as file:
+#         writer = csv.writer(file)
+#         if not file_exists:
+#             writer.writerow(["Feedback"])
+#
+#         writer.writerow([feedback])
+#
+#
+# def connect_to_email(host, username, password):
+#     """Connect to an IMAP email server."""
+#     mail = imaplib.IMAP4_SSL(host)
+#     mail.login(username, password)
+#     return mail
+#
+#
+# def fetch_emails(mail, folder='inbox'):
+#     """Fetch emails from a specified folder."""
+#     mail.select(folder)
+#     _, data = mail.search(None, 'ALL')
+#     for num in data[0].split():
+#         _, data = mail.fetch(num, '(RFC822)')
+#         yield email.message_from_bytes(data[0][1], policy=default)
+#
+#
+# def extract_email_features(msg):
+#     """Extract features from an email message."""
+#     subject = msg['Subject']
+#     from_addr = msg['From']
+#     body = get_email_body(msg)
+#     attachments = get_email_attachments(msg)
+#     links = extract_links(body)
+#     return subject, from_addr, body, attachments, links
+#
+#
+# def get_email_body(msg):
+#     """Get the plain text body of an email message."""
+#     if msg.is_multipart():
+#         for part in msg.walk():
+#             if part.get_content_type() == 'text/plain':
+#                 return part.get_payload(decode=True).decode('utf-8')
+#     else:
+#         return msg.get_payload(decode=True).decode('utf-8')
+#
+#
+# def get_email_attachments(msg):
+#     """Extract attachments from an email message."""
+#     attachments = []
+#     if msg.is_multipart():
+#         for part in msg.walk():
+#             if part.get_content_disposition() == 'attachment':
+#                 attachments.append(part)
+#     return attachments
+#
+#
+# def extract_links(text):
+#     """Extract links from the email body."""
+#     link_pattern = r'https?://\S+|www\.\S+'
+#     return re.findall(link_pattern, text)
+#
+#
+# def analyze_attachments(attachments):
+#     """Analyze the attachments for potential malware."""
+#     attachment_scores = []
+#     for attachment in attachments:
+#         filename = attachment.get_filename()
+#         if filename:
+#             score = analyze_file(filename, attachment.get_payload(decode=True))
+#             attachment_scores.append((filename, score))
+#     return attachment_scores
+#
+#
+# # def analyze_file(filename, content):
+# #     """Analyze a file for potential malware."""
+# #     # Implement file analysis logic here (e.g., using VirusTotal API)
+# #     # Return a malware score between 0 and 1 (0 = safe, 1 = malicious)
+# #     return 0.2
+#
+# # def analyze_text(text):
+# #     """Analyze the email body text for potential malicious content."""
+# #     # Implement text analysis logic here (e.g., using a pre-trained NLP model)
+# #     # Return a malicious content score between 0 and 1 (0 = safe, 1 = malicious)
+# #     return 0.3
+# api_keyy = os.getenv("API_KEYY")
+#
+#
 # def analyze_file(filename, content):
 #     """Analyze a file for potential malware."""
-#     # Implement file analysis logic here (e.g., using VirusTotal API)
-#     # Return a malware score between 0 and 1 (0 = safe, 1 = malicious)
-#     return 0.2
-
+#     # Example implementation using VirusTotal API
+#     api_key = api_keyy
+#     url = "https://www.virustotal.com/vtapi/v2/file/scan"
+#     files = {'file': (filename, content)}
+#     params = {'apikey': api_key}
+#     response = requests.post(url, files=files, params=params)
+#
+#     if response.status_code == 200:
+#         result = response.json()
+#         scan_id = result['scan_id']
+#         report_url = f"https://www.virustotal.com/vtapi/v2/file/report?apikey={api_key}&resource={scan_id}"
+#         report_response = requests.get(report_url)
+#
+#         if report_response.status_code == 200:
+#             report = report_response.json()
+#             positives = report.get('positives', 0)
+#             total = report.get('total', 1)
+#             return positives / total
+#
+#
 # def analyze_text(text):
-#     """Analyze the email body text for potential malicious content."""
-#     # Implement text analysis logic here (e.g., using a pre-trained NLP model)
-#     # Return a malicious content score between 0 and 1 (0 = safe, 1 = malicious)
-#     return 0.3
-# api_keyy = os.getenv("API_KEYY")
-
-
-def analyze_file(filename, content):
-    """Analyze a file for potential malware."""
-    # Example implementation using VirusTotal API
-    api_key = api_keyy
-    url = "https://www.virustotal.com/vtapi/v2/file/scan"
-    files = {'file': (filename, content)}
-    params = {'apikey': api_key}
-    response = requests.post(url, files=files, params=params)
-
-    if response.status_code == 200:
-        result = response.json()
-        scan_id = result['scan_id']
-        report_url = f"https://www.virustotal.com/vtapi/v2/file/report?apikey={api_key}&resource={scan_id}"
-        report_response = requests.get(report_url)
-
-        if report_response.status_code == 200:
-            report = report_response.json()
-            positives = report.get('positives', 0)
-            total = report.get('total', 1)
-            return positives / total
-
-
-def analyze_text(text):
-    try:
-        classifier = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
-        result = classifier(text)
-
-        if result:
-            score = result[0]['score']
-            label = result[0]['label']
-            return score if label == 'NEGATIVE' else 0
-        return 0  # Default to 0 if no result
-
-    except Exception as e:
-        print(f"Error in text analysis: {e}")
-        return 0
-
-
+#     try:
+#         classifier = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
+#         result = classifier(text)
+#
+#         if result:
+#             score = result[0]['score']
+#             label = result[0]['label']
+#             return score if label == 'NEGATIVE' else 0
+#         return 0  # Default to 0 if no result
+#
+#     except Exception as e:
+#         print(f"Error in text analysis: {e}")
+#         return 0
+#
+#
+# def classify_email(subject, from_addr, body, attachments, links):
+#     """Classify an email as malicious or benign."""
+#     subject_score = analyze_text(subject)
+#     from_score = analyze_text(from_addr)
+#     body_score = analyze_text(body)
+#     attachment_scores = analyze_attachments(attachments)
+#     link_scores = [analyze_text(link) for link in links]
+#
+#     total_score = (
+#                           subject_score +
+#                           from_score +
+#                           body_score +
+#                           (max(link_scores) if link_scores else 0) +
+#                           (max(score for _, score in attachment_scores) if attachment_scores else 0)
+#                   ) / 5
+#
+#     if total_score > 0.5:
+#         return "Malicious"
+#     else:
+#         return "Benign"
+#
+#
+# def report_email(email_info, classification):
+#     """Report the email classification to the user."""
+#     subject, from_addr, body, attachments, links = email_info
+#     st.write(f"Subject: {subject}")
+#     st.write(f"From: {from_addr}")
+#     st.write("Body:")
+#     st.write(body)
+#     st.write(f"Attachments: {', '.join([a.get_filename() for a in attachments])}")
+#     st.write(f"Links: {', '.join(links)}")
+#     st.write(f"Classification: {classification}")
+#
+#
+# def final():
+#     st.title("Email Security Scanner")
+#
+#     host = st.text_input("IMAP Server Host", "imap.gmail.com")
+#     username = st.text_input("Email Username")
+#     password = st.text_input("Email Password", type="password")
+#
+#     if st.button("Scan Inbox"):
+#         mail = connect_to_email(host, username, password)
+#         for msg in fetch_emails(mail):
+#             email_info = extract_email_features(msg)
+#             classification = classify_email(*email_info)
+#             report_email(email_info, classification)
 
 
 def main():
@@ -460,134 +571,9 @@ def main():
     elif page == "Live Detection":
         live_detection()
 
-        # try:
-        #     with open('ids_model.pkl', 'rb') as f:
-        #         model = pickle.load(f)
-        #     with open('ids_scaler.pkl', 'rb') as f:
-        #         scaler = pickle.load(f)
-
-        #     if st.button("Start Flow Monitoring"):
-        #         placeholder = st.empty()
-        #         metrics_placeholder = st.empty()
-        #         chart_placeholder = st.empty()
-
-        #         flow_history = []
-
-        #         for i in range(50):
-        #             df = load_data()
-        #             random_flow = df.iloc[np.random.randint(len(df))].copy()
-        #             scaled_flow = scaler.transform(random_flow.drop('Label').values.reshape(1, -1))
-        #             prediction = model.predict(scaled_flow)[0]
-        #             prediction_prob = model.predict_proba(scaled_flow)[0]
-
-        #             flow_history.append({
-        #                 'time': i,
-        #                 'prediction': prediction,
-        #                 'confidence': prediction_prob.max()
-        #             })
-
-        #             with placeholder.container():
-        #                 col1, col2, col3 = st.columns(3)
-
-        #                 with col1:
-        #                     st.metric("Flow ID", f"#{i+1}")
-        #                 with col2:
-        #                     if prediction == 0:
-        #                         st.success("Benign Flow")
-        #                     else:
-        #                         st.error("Suspicious Flow")
-        #                 with col3:
-        #                     st.metric("Confidence", f"{prediction_prob.max():.2%}")
-
-        #                 st.json({
-        #                     'Flow Duration': f"{random_flow['Flow Duration']:.2f}",
-        #                     'Fwd Packets': f"{random_flow['Total Fwd Packets']:.2f}",
-        #                     'Bwd Packets': f"{random_flow['Total Backward Packets']:.2f}",
-        #                     'Fwd Bytes': f"{random_flow['Total Length of Fwd Packets']:.2f}",
-        #                     'Bwd Bytes': f"{random_flow['Total Length of Bwd Packets']:.2f}"
-        #                 })
-
-        #             if len(flow_history) > 1:
-        #                 history_df = pd.DataFrame(flow_history)
-        #                 fig = px.line(history_df, x='time', y='confidence',
-        #                             color=history_df['prediction'].astype(str),
-        #                             title='Flow Analysis History',
-        #                             color_discrete_map={'0': 'green', '1': 'red'})
-        #                 chart_placeholder.plotly_chart(fig)
-
-        #             time.sleep(0.5)
-
-        # except FileNotFoundError:
-        #     st.error("Please train the model first!")
-
-    elif page == "Analytics":
-        st.header("Flow Analytics Dashboard")
-
-        try:
-            df = load_data()
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                label_counts = df['Label'].value_counts()
-                fig = px.pie(values=label_counts.values,
-                             names=label_counts.index,
-                             title='Flow Classification Distribution')
-                st.plotly_chart(fig)
-
-            with col2:
-                fig = px.scatter(df, x='Total Fwd Packets', y='Total Backward Packets',
-                                 color='Label', title='Forward vs Backward Packets',
-                                 opacity=0.6)
-                st.plotly_chart(fig)
-
-            fig = px.histogram(df, x='Flow Duration', color='Label',
-                               title='Flow Duration Distribution',
-                               marginal='box')
-            st.plotly_chart(fig)
-
-            iat_cols = [col for col in df.columns if 'IAT' in col]
-            iat_data = df[iat_cols + ['Label']]
-
-            fig = px.box(iat_data.melt(id_vars=['Label'],
-                                       value_vars=iat_cols),
-                         x='variable', y='value', color='Label',
-                         title="IAT Analysis")
-            st.plotly_chart(fig)
-
-        except FileNotFoundError:
-            st.error("Data is not loaded yet. Please load the data first!")
-
-    
-        # st.sidebar.title("Application Settings")
-    # st.sidebar.write("Customize the app's appearance and behavior:")
-    # theme = st.sidebar.selectbox("Select a theme", ["Light", "Dark"])
-    # if theme == "Dark":
-    #     st.markdown("""
-    #     <style>
-    #     [data-theme="dark"] {
-    #         --background-color: #1c1c1e;
-    #         --text-color: #f2f2f2;
-    #         --primary-color: #0077b6;
-    #         --secondary-color: #00a8e8;
-    #     }
-    #     </style>
-    #     """, unsafe_allow_html=True)
-    # else:
-    #     st.markdown("""
-    #     <style>
-    #     [data-theme="light"] {
-    #         --background-color: #f2f2f2;
-    #         --text-color: #1c1c1e;
-    #         --primary-color: #0077b6;
-    #         --secondary-color: #00a8e8;
-    #     }
-    #     </style>
-    #     """, unsafe_allow_html=True)
-
     st.sidebar.write("---")
     st.sidebar.title("About")
-    st.sidebar.write("Network Flow IDS v1.2")
+    st.sidebar.write("Network Flow IDS v1.0")
     # st.sidebar.write("Built with Streamlit, Plotly, and Scikit-learn")
     st.sidebar.write("Created by Group 196")
 
