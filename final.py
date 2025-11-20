@@ -214,14 +214,6 @@ def main():
         - Flow-based traffic analysis
         - Machine learning-based detection
         - Interactive visualizations
-        - Real-time flow monitoring
-        
-        ### Key Flow Metrics Analyzed:
-        - Flow Duration
-        - Packet Counts (Forward/Backward)
-        - Packet Lengths
-        - Inter-arrival Times (IAT)
-        - Flow Patterns
         """)
         
         st.sidebar.title("Quick Actions")
@@ -342,18 +334,7 @@ def main():
     st.sidebar.write("Created by Team Fireshark")
     
     st.sidebar.write("---")
-    st.sidebar.title("Feedback")
-    with st.sidebar.form("feedback_form"):
-        st.write("Let us know how we can improve!")
-        feedback = st.text_area("Your feedback")
-        submit = st.form_submit_button("Submit")
-        if submit:
-            if feedback.strip():
-             save_feedback_to_csv(feedback)
-             st.success("Thank you for your feedback! It has been saved.")
-        else:
-            # Optional: Don't show warning on initial load, only if clicked empty
-            pass
+    st.sidebar.title("Let us know how we can improve!")
             
 if __name__ == "__main__":
     if "page" not in st.session_state:
