@@ -216,21 +216,6 @@ def main():
         - Interactive visualizations
         """)
         
-        st.sidebar.title("Quick Actions")
-        st.sidebar.write("Access the app's main features quickly:")
-        
-        if st.sidebar.button("View Analytics", key="analytics_btn"):
-            st.session_state.page = "Analytics"
-            st.rerun()
-        
-        if st.sidebar.button("Retrain Model", key="retrain_btn"):
-            st.session_state.page = "Training"
-            st.rerun()
-        
-        if st.sidebar.button("Live Detection", key="live_detection_btn"):
-            st.session_state.page = "Live Detection"
-            st.rerun()
-
     elif page == "Training":
         st.header("Model Training")
         
