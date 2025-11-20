@@ -329,9 +329,8 @@ def main():
 
     st.sidebar.write("---")
     st.sidebar.title("About")
-    st.sidebar.write("Network Flow IDS v1.2")
-    st.sidebar.write("Built with Streamlit, Plotly, and Scikit-learn")
-    st.sidebar.write("Created by Team Fireshark")
+    st.sidebar.write("Network Flow IDS v1.0")
+    st.sidebar.write("Created by Group 196")
     
     st.sidebar.write("---")
     st.sidebar.title("Let us know how we can improve!")
