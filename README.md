@@ -8,7 +8,7 @@ Welcome to the **AI Powered Network Intrusion Detection System**! This project p
 
 ## **Links**
 
-- **Live Project**: [Fireshark Application]([https://fire-shark.streamlit.app/](https://ai---ids-jidvb7tg99seurklkynv8n.streamlit.app/))  
+- **Live Project**: [Fireshark Application]([[https://fire-shark.streamlit.app/](https://ai---ids-jidvb7tg99seurklkynv8n.streamlit.app/)](https://ai---ids-jidvb7tg99seurklkynv8n.streamlit.app/))  
 
 ---
 
